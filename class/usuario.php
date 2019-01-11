@@ -106,7 +106,7 @@ class Usuario {
     {
         $sql = new Sql();
 
-        return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin");
+        return $sql->select("SELECT * FROM tb_usuarios ORDER BY idusuario");
     }
 
     public static function search($login)
@@ -138,14 +138,6 @@ class Usuario {
         }
     }
     
-    public function setData($datas)
-    {
-        $this->setIdusuario($datas["idusuario"]);
-        $this->setDeslogin($datas["deslogin"]);
-        $this->setDessenha($datas["dessenha"]);
-        $this->setDtcadastro(new DateTime($datas["dtcadastro"]));
-    }
-
     public function insert()
     {
         $sql = new Sql();
@@ -154,22 +146,22 @@ class Usuario {
             ":LOGIN" => $this->getDeslogin(),
             ":PASSWORD" => $this->getDessenha(),
         ));
-
+        
         //print_r($result);
-
+        
         if(count($result) > 0)
         {
             $this->setData($result[0]);
         }
     }
-
+    
     public function update($login , $senha)
     {
         $this->setDeslogin($login);
         $this->setDessenha($senha);
-
+        
         $sql = new Sql();
-
+        
         $sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN , dessenha = :PASSWORD WHERE idusuario = :ID ", 
         array( 
             ":LOGIN" => $this->getDeslogin(),
@@ -178,12 +170,32 @@ class Usuario {
         ));
     }
 
+    public function delete()
+    {
+        $sql = new Sql();
+        
+        $sql->query("DELETE FROM tb_usuarios WHERE idusuario = :ID" , array( 
+            ":ID" => $this->getIdusuario(),
+        ));
+
+        $lista = $this->getList(); 
+        echo json_encode($lista); 
+    }
+    
+    public function setData($datas)
+    {
+        $this->setIdusuario($datas["idusuario"]);
+        $this->setDeslogin($datas["deslogin"]);
+        $this->setDessenha($datas["dessenha"]);
+        $this->setDtcadastro(new DateTime($datas["dtcadastro"]));
+    }
+
     public function __construct($login = "" , $senha = "")
     {
         $this->setDeslogin($login);
         $this->setDessenha($senha);
     }
-
+    
     public function __toString()
     {
         return json_encode(array(

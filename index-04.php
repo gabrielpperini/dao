@@ -3,8 +3,8 @@
 require_once('config.php');
 
 //insere login e senha com metodo __construct e devolve id criado com dados respectivos
-//$usuario = new Usuario("Zenaide" , "marli123");
-//$usuario->insert();
+$usuario = new Usuario("excluido" , "marli123");
+$usuario->insert();
 
 if($usuario){
    echo $usuario; 
